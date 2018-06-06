@@ -42,6 +42,7 @@ DEVICE_CHUNK = 10
 OS_TYPE_LIST = {"ACNS","ACSW","ALTIGAOS","ASA","ASYNCOS","CATOS","CDS-IS","CDS-TV","CDS-VN","CDS-VQE","CTS","CUSP","ECDS","FWSM-OS","GSS","IOS","IOS XR",
                 "IOS-XE","IPS","NAM","NX-OS","NX-OS ACI","ONS","PIXOS","SAN-OS","STAR OS","TC","TE","UCS NX-OS","VCS","VDS-IS","WAAS",
                 "WANSW BPX/IGX/IPX","WEBNS","WLC","WLSE-OS","XC"}
+LC_TYPE = ["PSIRT","HWEOL","TEST"]
 
 #Check for internet/network connection
 def internet_on():
@@ -255,12 +256,22 @@ def main():
     caa_array = get_queryset_map(ddata_map)
 
 
+    #Check to see if they have DNACaaP ITSM installed
+    ticket = "N"
+    message = dnac.post_itsm("Dummy", LC_TYPE[2])
+    if (message == "The request has been accepted for execution"):
+        print("########## We detect DNACaaP ServiceNow package in your cluster ##########")
+        ticket = input("\nWould you like to automatically generate a ticket for your lifecycle data? Type Y/N ")
+
     #Templates for displaying device and LC info
     template = '{:<20} {:<15} {:<6}'
     table_headers = ['PlatformId', 'S/w Type', 'S/w Version']
     table_ul = ['--------', '----------', '------']
 
     uber_data = dict()
+    num_psirts = 0
+    num_hweol = 0
+    num_sweol = 0
     #Get lifecycle data -- loop through the json array
     for query_set in caa_array:
         print("\n")
@@ -274,25 +285,34 @@ def main():
         tmp_uber_data = merge_data(json.loads(json.dumps(lc_data)),json.loads(json.dumps(dup_ddata_map)))
         uber_data = {**uber_data, **tmp_uber_data}
 
-        num_psirts = 0
-        num_hweol = 0
-        num_sweol = 0
         for key in tmp_uber_data:
             dev = tmp_uber_data[key]
-            if dev.get("psirts") != None:
+            if dev.get("psirts") != None and len(dev.get("psirts")) != 0 and dev.get("psirts") != "":
                 for psirt in dev["psirts"]:
                     num_psirts += 1
-            num_hweol = num_hweol + 1 if dev.get("hweol") != None else num_hweol
+                # Raise ITSM ticket if there are PSIRTs
+                if(ticket == 'Y' or ticket == 'y'):
+                    message = dnac.post_itsm(dev,LC_TYPE[0])
+                    if (message == "The request has been accepted for execution"):
+                        print("\n########## Created a ticket with ServiceNow for Security Advisories against  - {} ##########".format(
+                                dev["hostname"]))
             num_sweol = num_sweol + 1 if dev.get("sweol") != None else num_sweol
-        print("\n########## Summary of Lifecycle ##########")
-        print("Number of PSIRTS - " +  str(num_psirts) )
-        print("Number of HWEOL - " + str(num_hweol))
-        print("Number of SWEOL - " + str(num_sweol))
+            if dev.get("hweol") != None:
+                num_hweol = num_hweol + 1
+                # Raise ITSM ticket if there is HWEOL
+                if (ticket == 'Y' or ticket == 'y'):
+                    message = dnac.post_itsm(dev,LC_TYPE[1])
+                    if (message == "The request has been accepted for execution"):
+                       print("\n########## Created a ticket with ServiceNow for the EOL device  - {} ##########".format(dev["hostname"]))
+    print("\n########## Summary of Lifecycle ##########")
+    print("Number of PSIRTS - " +  str(num_psirts) )
+    print("Number of HWEOL - " + str(num_hweol))
+    print("Number of SWEOL - " + str(num_sweol))
 
-
-    xl_sess = xl()
-    xl_sess.create_xlsxwriter_xl(uber_data)
-    print("\nPlease check \'lifecycle.xls\' in {} for the complete lifecycle information\n".format(os.getcwd()))
+    if(ticket != 'Y'):
+        xl_sess = xl()
+        xl_sess.create_xlsxwriter_xl(uber_data)
+        print("\nPlease check \'lifecycle.xls\' in {} for the complete lifecycle information\n".format(os.getcwd()))
 
 if __name__ == '__main__':
     main()

@@ -2,8 +2,12 @@
 
 
 The App will enable the users to view the published Security Advisories and Hardware and Software End-of-Life
-information of the devices in DNA Centre. The users can use the information to secure their network against
-vulnerabilities and upgrade their network by replacing the end-of-life devices .
+information of the devices in DNA Centre. If the user has DNACaaP ServiceNow package installed in their cluster,
+the app automatically generates tickets for the security advisories and hardware end-of-life with ServiceNow.
+
+The users can use the information to secure their network against vulnerabilities and upgrade their network by
+replacing the end-of-life devices.
+
 
 ## APIs used
 
@@ -12,8 +16,8 @@ DNAC Api – Get Inventory Devices & Get device count
             /api/v1/network-device/count
 CAA Apis – Get PSIRT, Hardware and Software EoL
             /asi/api/csoq/lifecycle
-
-
+DNACaaP Api - Post to ITSM Service now
+            /api/dnacaap/v1/dnacaap/core/dna/events/{}/event
 
 ## Requirements.
 
@@ -70,3 +74,4 @@ The application will require the following credentials information to retrieve l
 ## Author
 
 AR
+
