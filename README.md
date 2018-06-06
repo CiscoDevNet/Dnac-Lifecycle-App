@@ -31,7 +31,7 @@ The script requires the following packages/libraries to be installed.
 For help run:
 
 ```
-app/main.py -h
+main.py -h
 
 ```
         usage: main.py [-h] [-i IPADDRESS] [-u UNAME] {lifecycle}
@@ -54,7 +54,7 @@ For running the lifecycle application:
 
 
 ```
-app/main.py -i <cluster ipaddress> -u <uname> lifecycle
+main.py -i <cluster ipaddress> -u <uname> lifecycle
 
 ```
 
@@ -70,4 +70,3 @@ The application will require the following credentials information to retrieve l
 ## Author
 
 AR
-
