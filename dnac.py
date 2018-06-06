@@ -84,7 +84,7 @@ HWEOL_EVENT_POST_BODY= '''
             "device": {
                 "macAddress": "{}",
                 "hostname": "{}",
-                "serialNumber": "{}",
+                "node": "{}",
                 "softwareVersion": "{}",
                 "productId": "{}"
             },
@@ -123,7 +123,7 @@ PSIRT_EVENT_POST_BODY = '''
             "device": {
                 "macAddress": "{}",
                 "hostname": "{}",
-                "serialNumber": "{}",
+                "node": "{}",
                 "softwareVersion": "{}",
                 "productId": "{}"
             },
@@ -197,7 +197,7 @@ class Dnac_session:
             body["id"] = str(eventid)
             body["enrichmentInfo"]["details"]["device"]["macAddress"] = dev["mac"]
             body["enrichmentInfo"]["details"]["device"]["hostname"] = dev["hostname"]
-            body["enrichmentInfo"]["details"]["device"]["serialNumber"] = dev["serial"]
+            body["enrichmentInfo"]["details"]["device"]["node"] = dev["serial"]
             body["enrichmentInfo"]["details"]["device"]["softwareVersion"] = dev["swVersion"]
             body["enrichmentInfo"]["details"]["device"]["productId"] = dev["pid"]
             body["enrichmentInfo"]["details"]["eol"]["announceDate"] = self.date_format(int(dev["hweol"]["externalAnnounceDate"]))
@@ -209,11 +209,10 @@ class Dnac_session:
             body["id"] = str(eventid)
             body["enrichmentInfo"]["details"]["device"]["macAddress"] = dev["mac"]
             body["enrichmentInfo"]["details"]["device"]["hostname"] = dev["hostname"]
-            body["enrichmentInfo"]["details"]["device"]["serialNumber"] = dev["serial"]
+            body["enrichmentInfo"]["details"]["device"]["node"] = dev["serial"]
             body["enrichmentInfo"]["details"]["device"]["softwareVersion"] = dev["swVersion"]
             body["enrichmentInfo"]["details"]["device"]["productId"] = dev["pid"]
-            for psirt in dev["psirts"]:
-                body["enrichmentInfo"]["details"]["psirts"] = dev["psirts"]
+            body["enrichmentInfo"]["details"]["psirts"] = dev["psirts"]
         elif(type == "TEST"):
             body = json.loads(TEST_EVENT_POST_BODY)
             body["id"] = str(eventid)

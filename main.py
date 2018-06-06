@@ -155,7 +155,6 @@ def merge_data(lc_resp, dup_data):
             dev_details = {}
             if(device["pid"] == dup_device["pid"] and device["osType"] == dup_device["osType"] and
                     device["swVersion"] == dup_device["swVersion"]):
-                dev_details["serial"] = dup_device["serialNumber"]
                 dev_details["psirts"] = device["psirts"]
                 dev_details["hweol"] = device["hweol"] if device.get("hweol") != None else None
                 dev_details["sweol"] = device["sweol"] if device.get("sweol") != None else None
@@ -164,19 +163,7 @@ def merge_data(lc_resp, dup_data):
                 dev_details["swVersion"] = dup_device["swVersion"]
                 dev_details["hostname"] = dup_device["hostname"] if dup_device.get("hostname") is not None else None
                 dev_details["type"] = dup_device["type"] if dup_device.get("type") is not None else None
-                dev_details["serial"] = dup_device["serial"] if dup_device.get("serial") is not None else None
-                dev_details["ip"] = dup_device["ip"] if dup_device.get("ip") is not None else None
-                dev_details["mac"] = dup_device["mac"] if dup_device.get("mac") is not None else None
-                dev_details["serial"] = dup_device["serialNumber"]
-                dev_details["psirts"] = device["psirts"]
-                dev_details["hweol"] = device["hweol"] if device.get("hweol") != None else None
-                dev_details["sweol"] = device["sweol"] if device.get("sweol") != None else None
-                dev_details["pid"] = device["pid"]
-                dev_details["osType"] = device["osType"]
-                dev_details["swVersion"] = device["swVersion"]
-                dev_details["hostname"] = dup_device["hostname"] if dup_device.get("hostname") is not None else None
-                dev_details["type"] = dup_device["type"] if dup_device.get("type") is not None else None
-                dev_details["serial"] = dup_device["serial"] if dup_device.get("serial") is not None else None
+                dev_details["serial"] = dup_device["serialNumber"] if dup_device.get("serialNumber") is not None else None
                 dev_details["ip"] = dup_device["ip"] if dup_device.get("ip") is not None else None
                 dev_details["mac"] = dup_device["mac"] if dup_device.get("mac") is not None else None
                 merged_data[key] = dev_details
