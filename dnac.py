@@ -39,12 +39,12 @@ TEST_EVENT_POST_BODY= '''
 {
     "id": "{}",
     "name": "Test",
-    "category": "Warn",
+    "category": "Info",
     "domain": "EOL",
     "description": "This is a test message",
     "type": "Network",
     "status": "New",
-    "severity": "P2",
+    "severity": "P5",
     "timestamp": "",
     "tenantId": "",
     "namespace": "",
@@ -55,7 +55,7 @@ TEST_EVENT_POST_BODY= '''
     "actualServiceId": "",
     "workflowIndicator": "RFC",
     "enrichmentInfo": {
-        "details":"Test"
+        "details":"Testing ITSM"
     }
 }
 '''
